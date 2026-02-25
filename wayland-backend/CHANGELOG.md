@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Additions
+- client: Added `display_ptr` method to `ObjectId`
+
 ## 0.3.12 -- 2025-12-30
 
 #### Bugfixes
