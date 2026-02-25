@@ -139,11 +139,11 @@ impl InnerObjectId {
         Ok(Self { id, ptr, alive, interface })
     }
 
-    pub fn as_ptr(&self) -> *mut wl_proxy {
+    pub fn as_ptr(&self) -> Result<NonNull<wl_proxy>, InvalidId> {
         if self.alive.as_ref().map(|alive| alive.load(Ordering::Acquire)).unwrap_or(true) {
-            self.ptr
+            NonNull::new(self.ptr).ok_or(InvalidId)
         } else {
-            std::ptr::null_mut()
+            Err(InvalidId)
         }
     }
 

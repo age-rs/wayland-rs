@@ -66,7 +66,7 @@ impl client::ObjectId {
     /// Returns `NULL` if the proxy has already been destroyed.
     // TODO(breaking): Return `Result`
     pub fn as_ptr(&self) -> *mut wayland_sys::client::wl_proxy {
-        self.id.as_ptr()
+        self.id.as_ptr().map_or(std::ptr::null_mut(), |p| p.as_ptr())
     }
 
     /// Get the underlying display pointer for this object.
@@ -213,7 +213,7 @@ impl server::ObjectId {
     /// Returns `NULL` if the resource has already been destroyed.
     // TODO(breaking): Return `Result`
     pub fn as_ptr(&self) -> *mut wayland_sys::server::wl_resource {
-        self.id.as_ptr()
+        self.id.as_ptr().map_or(std::ptr::null_mut(), |p| p.as_ptr())
     }
 }
 

@@ -7,6 +7,7 @@ use std::{
         io::{BorrowedFd, FromRawFd, IntoRawFd, OwnedFd, RawFd},
         net::UnixStream,
     },
+    ptr::NonNull,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex, Weak,
@@ -201,11 +202,11 @@ impl InnerObjectId {
         }
     }
 
-    pub fn as_ptr(&self) -> *mut wl_resource {
+    pub fn as_ptr(&self) -> Result<NonNull<wl_resource>, InvalidId> {
         if self.alive.load(Ordering::Acquire) {
-            self.ptr
+            NonNull::new(self.ptr).ok_or(InvalidId)
         } else {
-            std::ptr::null_mut()
+            Err(InvalidId)
         }
     }
 }
